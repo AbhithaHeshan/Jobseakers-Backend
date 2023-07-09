@@ -82,7 +82,6 @@ public class ApplicationStatusImpl implements ApplicationService {
 
     }
 
-
     @Override
     public ApplicationDTO updateApplicationApproval(String applicationId, String status) {
         if(status.equals("Registered")) {
@@ -104,9 +103,8 @@ public class ApplicationStatusImpl implements ApplicationService {
             registeredEmployeeRepo.save(registeredEmployee);
 
             return modalMapper.map(applicationRepo.save(application), ApplicationDTO.class);
-
-            //dfdfdfdfdf
         }
+
         return null;
     }
 

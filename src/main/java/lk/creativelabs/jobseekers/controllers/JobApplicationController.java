@@ -42,7 +42,6 @@ public class JobApplicationController {
 
     @PostMapping("/update/status")
     public ResponseUtil updateApplicationStatus(@RequestHeader String applicationId , @RequestBody Map<String, String> data){
-
          return  new ResponseUtil(200,"status update",applicationService.updateApplicationApproval(applicationId,data.get("status")));
 
     }
