@@ -26,13 +26,13 @@ interface CustomSubmittedWorksRepo {
 
 class CustomSubmittedWorkImpl implements  CustomSubmittedWorksRepo{
 
-
     public MongoTemplate mongoTemplate;
 
     @Override
     public List<SubmittedWorks> findByClientId(String clientId) {
+
         Query query = new Query();
-        query.addCriteria(Criteria.where("workStatus").is("submitted").and("clientId").is(clientId));
+        query.addCriteria(Criteria.where("workStatus").is("Submitted").and("clientId").is(clientId));
         return mongoTemplate.find(query, SubmittedWorks.class);
 
     }

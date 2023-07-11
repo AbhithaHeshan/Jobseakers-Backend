@@ -26,6 +26,7 @@ public class WorksController {
          @Autowired
          WorkService workService;
 
+
          @PostMapping("create/new/works")
          public ResponseUtil giveWorksToTheRegisteredEmployee(@RequestParam String details,@RequestParam MultipartFile doc) throws Exception {
 
@@ -51,10 +52,14 @@ public class WorksController {
              return new ResponseUtil(200," give works ",workService.giveWorkForTheEmployee(employeeWorksDTO));  //workService.giveWorkForTheEmployee(employeeWorksDTO)
          }
 
+
+
          @GetMapping("/get/works")
          public ResponseUtil getWorksForEachEmployee(@RequestHeader String employeeId){
             return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
          }
+
+
 
          @PostMapping("/submitted/works")
          public ResponseUtil postCompletedWorks(@RequestParam String submitWorks, @RequestParam MultipartFile doc) throws Exception {
@@ -81,6 +86,8 @@ public class WorksController {
              return new ResponseUtil(200,"submit success",workService.submittedWorks(submittedWorksDTO));
 
          }
+
+
 
          @GetMapping("/getSubmittedWorks")
          public ResponseUtil getAllSubmittedWorks(@RequestHeader String clientId){
@@ -118,6 +125,8 @@ public class WorksController {
         public ResponseUtil getAllReadWorks(@RequestHeader String jobId){
 
             return new ResponseUtil(200,"get all reads",null);
+
         }
+
 
 }
