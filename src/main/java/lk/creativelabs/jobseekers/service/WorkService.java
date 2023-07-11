@@ -5,16 +5,26 @@ import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
 import lk.creativelabs.jobseekers.entity.EmployeeWorks;
 import lk.creativelabs.jobseekers.entity.SubmittedWorks;
 
+import java.util.List;
+
 public interface WorkService {
 
 
-        EmployeeWorks giveWorkForTheEmployee(EmployeeWorksDTO employeeWorksDTO);
+        EmployeeWorksDTO giveWorkForTheEmployee(EmployeeWorksDTO employeeWorksDTO);
 
 
-        SubmittedWorks submittedWorks(SubmittedWorksDTO submittedWorksDTO);
+        SubmittedWorksDTO submittedWorks(SubmittedWorksDTO submittedWorksDTO);
 
 
-        EmployeeWorks getWorksForEmployees(String employeeId);
+        List<EmployeeWorksDTO> getWorksForWork(String employeeId);
+
+
+        List<SubmittedWorksDTO> getSubmittedWorks(String clientId);
+
+
+        EmployeeWorksDTO markWork(String jobId,String status);
+
+        SubmittedWorksDTO markWorkAsRead(String jobId);
 
 
 

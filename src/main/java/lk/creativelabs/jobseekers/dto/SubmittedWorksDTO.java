@@ -1,10 +1,8 @@
 package lk.creativelabs.jobseekers.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lk.creativelabs.jobseekers.dto.utils.Works;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,11 +10,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubmittedWorksDTO {
 
     private String clientId;
     private String employeeId;
-    private Works postWork;
+    private String employeeName;
+    private Works workInfo;
+    private String jobId;
     private LocalDate submittedDate;
+    private String workStatus;
 
 }

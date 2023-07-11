@@ -5,9 +5,11 @@ import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.dto.UserCredentialsDTO;
 import lk.creativelabs.jobseekers.entity.Client;
 import lk.creativelabs.jobseekers.entity.Employee;
+import lk.creativelabs.jobseekers.entity.RegisteredEmployee;
 import lk.creativelabs.jobseekers.entity.UserCredentials;
 import lk.creativelabs.jobseekers.repo.ClientRepo;
 import lk.creativelabs.jobseekers.repo.EmployeeRepo;
+import lk.creativelabs.jobseekers.repo.RegisteredEmployeeRepo;
 import lk.creativelabs.jobseekers.repo.UserCredentialsRepo;
 import lk.creativelabs.jobseekers.service.EmployeeService;
 import lk.creativelabs.jobseekers.util.UserIdGenerator;
@@ -28,6 +30,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     EmployeeRepo employeeRepo;
+
+    @Autowired
+    RegisteredEmployeeRepo registeredEmployeeRepo;
 
     @Autowired
     ClientRepo clientRepo;
@@ -110,7 +115,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    @Override
+    public List<ClientDTO> getRegisteredClientsForEmployee(String employeeId) {
+        Employee employeeByUserId = employeeRepo.getEmployeeByUserId(employeeId).get();
+        List<RegisteredEmployee> getAll = registeredEmployeeRepo.findAllByEmployee_EmployeeId(employeeByUserId.getEmployeeId());
 
+        List<ClientDTO> clientDTOSList = new ArrayList<>();
+        getAll.forEach((employee)->{
+            clientDTOSList.add(mapper.map(employee.getClient(),ClientDTO.class));
+        });
+
+
+        return clientDTOSList;
+    }
 
 
 }

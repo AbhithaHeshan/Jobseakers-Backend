@@ -11,9 +11,7 @@ public interface ApplicationService {
     ApplicationDTO createNewApplication(String clientId,String employeeId, ApplicationDTO applicationDTO);
 
     ArrayList<ApplicationDTO> getAllOfEachClient(String clientId);
-
-
-
-
     ApplicationDTO updateApplicationApproval(String applicationId, String status);
+
+
 }

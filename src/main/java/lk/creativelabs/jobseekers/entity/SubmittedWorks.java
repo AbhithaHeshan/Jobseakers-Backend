@@ -19,10 +19,12 @@ import java.time.LocalDate;
 public class SubmittedWorks {
 
     @Id
-    private long id;
+    private String id;
     private String clientId;
     private String employeeId;
+    private String jobId;
     private Works completedWork;
     private LocalDate submittedDate;
+    private String workStatus;
 
 }

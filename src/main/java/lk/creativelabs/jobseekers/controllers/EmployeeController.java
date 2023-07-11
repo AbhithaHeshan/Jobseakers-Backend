@@ -85,4 +85,11 @@ public class EmployeeController {
 
     //send message to the client
 
+
+    @GetMapping("/get/clients")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseUtil getClientsOfRegisteredEmployee(@RequestHeader String employeeUserId){
+        return new ResponseUtil(200,"ww",employeeService.getRegisteredClientsForEmployee(employeeUserId));
+    }
+
 }

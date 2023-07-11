@@ -46,4 +46,8 @@ public class JobCategoryController {
               return new ResponseUtil(200,"save success",jobCatogaryService.getAllRoleTypesByCatogary(catogary));
             }
 
+
+
+
+
 }

@@ -66,6 +66,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET,"/jobApplication/get/byId").permitAll();
         http.authorizeRequests().antMatchers(POST,"/jobApplication/update/status").permitAll();
 
+        http.authorizeRequests().antMatchers(POST,"/works/create/new/works").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/works/getSubmittedWorks/**").permitAll();
+        http.authorizeRequests().antMatchers(POST,"/works/submitted/works").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/works/get/works").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/works/getSubmittedWorks").permitAll();
+        http.authorizeRequests().antMatchers(POST,"/works/mark/works/**").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/employee/get/clients").permitAll();
+
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthonticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -5,6 +5,7 @@ import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.dto.UserCredentialsDTO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ClientService {
 
@@ -19,4 +20,6 @@ public interface ClientService {
     ArrayList<EmployeeDTO> getAllEmployeesByClientUserId(String userId) throws Exception;
 
     ArrayList<String> getFilteredAllJobTypes(String userId) throws Exception;
+
+
 }

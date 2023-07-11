@@ -1,9 +1,11 @@
 package lk.creativelabs.jobseekers.service;
+import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.dto.UserCredentialsDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface EmployeeService {
 
@@ -13,6 +15,8 @@ public interface EmployeeService {
     String Login(UserCredentialsDTO loginDetails);
     ArrayList<EmployeeDTO> getAllEmployees();
     EmployeeDTO getEmployee(String userId,String role) throws Exception;
+
+    List<ClientDTO> getRegisteredClientsForEmployee(String employeeId);
 
 
 }
