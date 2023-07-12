@@ -6,12 +6,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.Collections;
 import java.util.List;
 
 public interface EmployeeWorksRepo extends MongoRepository<EmployeeWorks,String> , CustomEmployeeWorksRepo{
 
               EmployeeWorks findByJobId(String jobId);
               List<EmployeeWorks> findByWorkStatusAndEmployeeId(String workStatus, String employeeId);
+
 
 }
 
@@ -22,6 +25,10 @@ interface CustomEmployeeWorksRepo{
        List<EmployeeWorks>  findAllByFilterWhenCatogaryIsAll(String clientId,String status);
        List<EmployeeWorks>  findAllByFilterWhenStatusIsAll(String clientId,String catogary);
        List<EmployeeWorks>  findAllByFilterWhenAll(String clientId);
+
+       List<EmployeeWorks> findDocUriById(String jobId);
+
+
 }
 
 class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
@@ -67,6 +74,14 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
         query.addCriteria(Criteria.where("clientId").is(clientId));
 
         return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+    @Override
+    public List<EmployeeWorks> findDocUriById(String jobId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("postWork.docUrl").is(jobId));
+
+        return Collections.singletonList(mongoTemplate.findOne(query, EmployeeWorks.class));
     }
 
 

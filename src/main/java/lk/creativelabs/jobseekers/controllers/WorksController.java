@@ -110,14 +110,12 @@ public class WorksController {
 
         }
 
-
-        @PostMapping ("/mark/works/read")   // mark as read completerd works by client
+        @GetMapping ("/mark/works/read")   // mark as read completerd works by client
         public ResponseUtil submittedWorksMarkAsRead(@RequestHeader String jobId){
 
             return new ResponseUtil(200,"mark as read",workService.markWorkAsRead(jobId));
 
         }
-
 
         //get all accepted
         @PostMapping ("get/all/accept/works")
