@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +36,10 @@ public class WorksController {
                          JsonMapper jsonMapper = new JsonMapper();
                          jsonMapper.registerModule(new JavaTimeModule());
                          EmployeeWorksDTO employeeWorksDTO = jsonMapper.readValue(details, EmployeeWorksDTO.class);
+
+                         System.out.println(employeeWorksDTO.getEmployeeId());
+
+
                          employeeWorksDTO.setJobId(UUID.randomUUID().toString());
 
                          String rootFolder = "./assets";
@@ -56,7 +61,10 @@ public class WorksController {
 
          @GetMapping("/get/works")
          public ResponseUtil getWorksForEachEmployee(@RequestHeader String employeeId){
-            return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
+
+
+
+             return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
          }
 
 
@@ -128,5 +136,11 @@ public class WorksController {
 
         }
 
+        @GetMapping ("get/all/dataBy")
+        public ResponseUtil getAllByX(@RequestHeader String userId,@RequestHeader String catogary,@RequestHeader String status){
+
+            return new ResponseUtil(200,"get all reads", workService.getDataFiltered(userId,catogary,status));
+
+        }
 
 }

@@ -2,15 +2,15 @@ package lk.creativelabs.jobseekers.service.impl;
 
 import lk.creativelabs.jobseekers.dto.EmployeeWorksDTO;
 import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
+import lk.creativelabs.jobseekers.dto.utils.EmployeeAndClent;
 import lk.creativelabs.jobseekers.dto.utils.Works;
+import lk.creativelabs.jobseekers.entity.Client;
 import lk.creativelabs.jobseekers.entity.Employee;
 import lk.creativelabs.jobseekers.entity.EmployeeWorks;
 import lk.creativelabs.jobseekers.entity.SubmittedWorks;
-import lk.creativelabs.jobseekers.repo.EmployeeRepo;
-import lk.creativelabs.jobseekers.repo.EmployeeWorksRepo;
-import lk.creativelabs.jobseekers.repo.RegisteredEmployeeRepo;
-import lk.creativelabs.jobseekers.repo.SubmittedWorksRepo;
+import lk.creativelabs.jobseekers.repo.*;
 import lk.creativelabs.jobseekers.service.WorkService;
+import lk.creativelabs.jobseekers.util.Base64Encorder;
 import lk.creativelabs.jobseekers.util.UserIdGenerator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,19 +41,26 @@ public class WorkServiceImpl implements WorkService {
     EmployeeRepo employeeRepo;
 
     @Autowired
+    ClientRepo clientRepo;
+
+    @Autowired
     ModelMapper modalMapper;
 
     @Override
     public EmployeeWorksDTO giveWorkForTheEmployee(EmployeeWorksDTO employeeWorksDTO) {
 
        // EmployeeWorks map = modalMapper.map(employeeWorksDTO, EmployeeWorks.class);
+        System.out.println("CVVVVVVVVVVVVVVVVVVVVVVVV");
+        Employee employeeByUserId = employeeRepo.getEmployeeByUserId(employeeWorksDTO.getEmployeeId()).get();
+        Client clientByUserId = clientRepo.getClientByUserId(employeeWorksDTO.getClientId()).get();
 
-        System.out.println(employeeWorksDTO.toString());
+        String empId = String.valueOf(employeeByUserId.getEmployeeId());
+        String cliId = String.valueOf(clientByUserId.getClientId());
 
         EmployeeWorks employeeWorks = new EmployeeWorks();
         employeeWorks.setId(UserIdGenerator.generateUserId());
-        employeeWorks.setEmployeeId(employeeWorksDTO.getEmployeeId());
-        employeeWorks.setClientId(employeeWorksDTO.getClientId());
+        employeeWorks.setEmployeeId(empId);
+        employeeWorks.setClientId(cliId);
         employeeWorks.setGivenDate(employeeWorksDTO.getGivenDate());
         employeeWorks.setDeadline(employeeWorksDTO.getDeadline());
         employeeWorks.setWorkStatus(employeeWorksDTO.getWorkStatus());
@@ -61,7 +69,7 @@ public class WorkServiceImpl implements WorkService {
 
         EmployeeWorks employeeWorks1 = employeeWorksRepo.save(employeeWorks);
 
-        Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(employeeWorksDTO.getEmployeeId()));
+        Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(employeeByUserId.getEmployeeId());
 
         Works postWork = employeeWorks1.getPostWork();
         new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(),postWork.getDocUrl());
@@ -75,14 +83,17 @@ public class WorkServiceImpl implements WorkService {
     @Override
     public SubmittedWorksDTO submittedWorks(SubmittedWorksDTO submittedWorksDTO) {
 
+        Employee employeeByUserId = employeeRepo.getEmployeeByUserId(submittedWorksDTO.getEmployeeId()).get();
+        Client clientByUserId = clientRepo.getClientByUserId(submittedWorksDTO.getClientId()).get();
+
         EmployeeWorks employeeWorks = employeeWorksRepo.findByJobId(submittedWorksDTO.getJobId());
         employeeWorks.setWorkStatus(submittedWorksDTO.getWorkStatus());
         employeeWorksRepo.save(employeeWorks);
 
         SubmittedWorks submittedWorks1 = new SubmittedWorks();
         submittedWorks1.setId(UserIdGenerator.generateUserId());
-        submittedWorks1.setEmployeeId(submittedWorksDTO.getEmployeeId());
-        submittedWorks1.setClientId(submittedWorksDTO.getClientId());
+        submittedWorks1.setEmployeeId(String.valueOf(employeeByUserId.getEmployeeId()));
+        submittedWorks1.setClientId(String.valueOf(clientByUserId.getClientId()));
         submittedWorks1.setSubmittedDate(submittedWorksDTO.getSubmittedDate());
         submittedWorks1.setWorkStatus(submittedWorksDTO.getWorkStatus());
         submittedWorks1.setJobId(submittedWorksDTO.getJobId());
@@ -96,17 +107,15 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public List<EmployeeWorksDTO> getWorksForWork(String employeeId) {
-
-        List<EmployeeWorks> employeeWorks = employeeWorksRepo.findWorks(employeeId);
-
-
+        Employee employeeByUserId = employeeRepo.getEmployeeByUserId(employeeId).get();
+        List<EmployeeWorks> employeeWorks = employeeWorksRepo.findWorks(String.valueOf(employeeByUserId.getEmployeeId()));
 
         List<EmployeeWorksDTO> data = new ArrayList<>();
         employeeWorks.forEach((empWorks)->{
             Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(empWorks.getEmployeeId()));
             Works postWork = empWorks.getPostWork();
             new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(),postWork.getDocUrl());
-            data.add(new EmployeeWorksDTO(empWorks.getClientId(), empWorks.getEmployeeId(),employeeByEmployeeId.get().getName(), empWorks.getJobId(),new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(),postWork.getDocUrl()),empWorks.getGivenDate(),empWorks.getDeadline(), empWorks.getWorkStatus()));
+            data.add(new EmployeeWorksDTO(empWorks.getClientId(), empWorks.getEmployeeId(),employeeByEmployeeId.get().getName(), empWorks.getJobId(),new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(), Base64Encorder.encode(postWork.getDocUrl())),empWorks.getGivenDate(),empWorks.getDeadline(), empWorks.getWorkStatus()));
         });
         return data;
 
@@ -114,8 +123,8 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public List<SubmittedWorksDTO> getSubmittedWorks(String clientId) {
-
-        List<SubmittedWorks> byClientId = submittedWorksRepo.findByClientId(clientId);
+        Client clientByUserId = clientRepo.getClientByUserId(clientId).get();
+        List<SubmittedWorks> byClientId = submittedWorksRepo.findByClientId(String.valueOf(clientByUserId.getClientId()));
         List<SubmittedWorksDTO> data = new ArrayList<>();
 
         byClientId.forEach((submitted)->{
@@ -155,6 +164,48 @@ public class WorkServiceImpl implements WorkService {
         Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(savedData.getEmployeeId()));
 
         return new SubmittedWorksDTO(savedData.getClientId(),savedData.getEmployeeId(),employeeByEmployeeId.get().getName(),new Works( savedData.getCompletedWork().getTitle(), savedData.getCompletedWork().getCategory(), savedData.getCompletedWork().getDescription(), savedData.getCompletedWork().getDocUrl()), savedData.getJobId(), savedData.getSubmittedDate(),savedData.getWorkStatus());
+    }
+
+    @Override
+    public EmployeeAndClent getDataFiltered(String userId, String catogary, String status) {
+
+        Client clientByUserId = clientRepo.getClientByUserId(userId).get();
+        List<EmployeeWorks> allByFilter = null;
+        if(catogary.equals("All") || status.equals("All")){
+              if(catogary.equals("All") && status.equals("All")){
+                  allByFilter   =  employeeWorksRepo.findAllByFilterWhenAll(String.valueOf(clientByUserId.getClientId()));
+              }else if (catogary.equals("All")){
+                  allByFilter   =  employeeWorksRepo.findAllByFilterWhenCatogaryIsAll(String.valueOf(clientByUserId.getClientId()), status);
+              }else{
+                  allByFilter   =  employeeWorksRepo.findAllByFilterWhenCatogaryIsAll(String.valueOf(clientByUserId.getClientId()), catogary);
+              }
+        }else if(status.equals("Submitted")){
+            List<SubmittedWorks> byClientId = submittedWorksRepo.findByClientId(String.valueOf(clientByUserId.getClientId()));
+            List<SubmittedWorksDTO> data = new ArrayList<>();
+            byClientId.forEach((submitted)->{
+                Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(submitted.getEmployeeId()));
+                Works postWork = submitted.getCompletedWork();
+                new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(),postWork.getDocUrl());
+                data.add(new SubmittedWorksDTO(submitted.getClientId(), submitted.getEmployeeId(),employeeByEmployeeId.get().getName(),new Works(postWork.getTitle(),postWork.getCategory(),postWork.getDescription(),postWork.getDocUrl()), submitted.getJobId(),submitted.getSubmittedDate(), submitted.getWorkStatus()));
+
+            });
+
+            return new EmployeeAndClent<>(data);
+
+        }else{
+            allByFilter   = employeeWorksRepo.findAllByFilter(String.valueOf(clientByUserId.getClientId()), catogary, status);
+
+
+        }
+
+        List<EmployeeWorksDTO> employeeWorksDTOS = new ArrayList<>();
+
+        allByFilter.forEach((submitted)->{
+            Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(submitted.getEmployeeId()));
+            employeeWorksDTOS.add(new EmployeeWorksDTO(submitted.getClientId(), submitted.getEmployeeId(),employeeByEmployeeId.get().getName(),submitted.getJobId(),new Works(submitted.getPostWork().getTitle(),submitted.getPostWork().getCategory(),submitted.getPostWork().getDescription(),submitted.getPostWork().getDocUrl()), submitted.getGivenDate(),submitted.getDeadline(), submitted.getWorkStatus()));
+        });
+
+        return new EmployeeAndClent<>(employeeWorksDTOS);
     }
 
 

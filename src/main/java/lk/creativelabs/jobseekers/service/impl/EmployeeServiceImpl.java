@@ -108,7 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployee(String userId,String role) throws Exception {
         try{
             Employee employee = employeeRepo.getEmployeeByUserIdAndRole(userId, role);
-            return new EmployeeDTO(employee.getName(),employee.getAddress(),employee.getDateOfBirth(),employee.getEmail(),employee.getTel(),employee.getProfileImageUri(),employee.getWorkingType(),employee.getJobType(),employee.getJobRoleType());
+            return mapper.map(employee,EmployeeDTO.class);
         }catch (Exception exception){
             throw new Exception(exception);
         }

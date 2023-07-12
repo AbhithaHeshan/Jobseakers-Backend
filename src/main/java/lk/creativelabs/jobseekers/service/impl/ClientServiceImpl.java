@@ -5,12 +5,15 @@ import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.dto.UserCredentialsDTO;
 import lk.creativelabs.jobseekers.entity.Client;
 import lk.creativelabs.jobseekers.entity.Employee;
+import lk.creativelabs.jobseekers.entity.RegisteredEmployee;
 import lk.creativelabs.jobseekers.entity.UserCredentials;
 import lk.creativelabs.jobseekers.entity.enums.ApprovalStatus;
 import lk.creativelabs.jobseekers.repo.ClientRepo;
 import lk.creativelabs.jobseekers.repo.EmployeeRepo;
+import lk.creativelabs.jobseekers.repo.RegisteredEmployeeRepo;
 import lk.creativelabs.jobseekers.repo.UserCredentialsRepo;
 import lk.creativelabs.jobseekers.service.ClientService;
+import lk.creativelabs.jobseekers.util.Base64Encorder;
 import lk.creativelabs.jobseekers.util.UserIdGenerator;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
@@ -35,6 +38,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     UserCredentialsRepo authRepo;
+
+
+    @Autowired
+    RegisteredEmployeeRepo registeredEmployeeRepo;
 
     @Autowired
     ModelMapper mapper;
@@ -125,11 +132,11 @@ public class ClientServiceImpl implements ClientService {
     public ArrayList<EmployeeDTO> getAllEmployeesByClientUserId(String userId) throws Exception {
         try{
             long clientId = clientRepository.findClientIdByUserId(userId);
-            List<Employee> employees = employeeRepo.getEmployeeByClientId(clientId);
 
+            List<RegisteredEmployee> byClientClientId = registeredEmployeeRepo.findByClient_ClientId(clientId);
             ArrayList<EmployeeDTO> employeeDTOs = new ArrayList<>();
-
-            for (Employee employee : employees) {
+            byClientClientId.forEach((res)->{
+                Employee employee = res.getEmployee();
                 EmployeeDTO employeeDTO = new EmployeeDTO();
                 employeeDTO.setName(employee.getName());
                 employeeDTO.setTel(employee.getTel());
@@ -138,10 +145,12 @@ public class ClientServiceImpl implements ClientService {
                 employeeDTO.setWorkingType(employee.getWorkingType());
                 employeeDTO.setDateOfBirth(employee.getDateOfBirth());
                 employeeDTO.setJobType(employee.getJobType());
+                employeeDTO.setJobRoleType(employee.getJobRoleType());
+                employeeDTO.setProfileImageUri(Base64Encorder.encode(employee.getProfileImageUri()));
+                employeeDTO.setUserId(employee.getUserId());
 
-                // Set other fields accordingly
                 employeeDTOs.add(employeeDTO);
-            }
+            });
 
             return employeeDTOs;
 

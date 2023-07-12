@@ -15,13 +15,14 @@ public interface EmployeeWorksRepo extends MongoRepository<EmployeeWorks,String>
 
 }
 
-
 interface CustomEmployeeWorksRepo{
        List<EmployeeWorks> findWorks(String employeeId);
+
+       List<EmployeeWorks>  findAllByFilter(String clientId,String catogary,String status);
+       List<EmployeeWorks>  findAllByFilterWhenCatogaryIsAll(String clientId,String status);
+       List<EmployeeWorks>  findAllByFilterWhenStatusIsAll(String clientId,String catogary);
+       List<EmployeeWorks>  findAllByFilterWhenAll(String clientId);
 }
-
-
-
 
 class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
 
@@ -35,4 +36,38 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
         return mongoTemplate.find(query, EmployeeWorks.class);
 
     }
+
+    @Override
+    public List<EmployeeWorks> findAllByFilter(String clientId,String category,String workStatus) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("clientId").is(clientId).and("postWork.category").is(category).and ("workStatus").is(workStatus));
+
+       return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+    @Override
+    public List<EmployeeWorks> findAllByFilterWhenCatogaryIsAll(String clientId,String workStatus) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("clientId").is(clientId).and ("workStatus").is(workStatus));
+
+        return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+    @Override
+    public List<EmployeeWorks> findAllByFilterWhenStatusIsAll(String clientId, String category) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("clientId").is(clientId).and("postWork.category").is(category));
+
+        return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+    @Override
+    public List<EmployeeWorks> findAllByFilterWhenAll(String clientId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("clientId").is(clientId));
+
+        return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+
 }

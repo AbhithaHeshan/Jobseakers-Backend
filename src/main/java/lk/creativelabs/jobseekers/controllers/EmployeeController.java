@@ -1,12 +1,10 @@
 package lk.creativelabs.jobseekers.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.service.EmployeeService;
+import lk.creativelabs.jobseekers.util.Base64Encorder;
 import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.ResponseUtil;
 import lk.creativelabs.jobseekers.util.UserRole;
@@ -15,10 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.security.RolesAllowed;
-import java.sql.SQLException;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("employee")
@@ -50,7 +44,9 @@ public class EmployeeController {
         employeeDTO.setProfileImageUri(profilePath);
 
         if(role.equals(UserRole.EMPLOYEE.getAuthority())){
-            employeeDTO.setRole(UserRole.EMPLOYEE.getAuthority());
+             employeeDTO.setRole(UserRole.EMPLOYEE.getAuthority());
+
+
              return new ResponseUtil(200,"save_success",employeeService.createNewEmployee(employeeDTO));
         }else{
             return new ResponseUtil(400,"user role is not valid",null);
@@ -63,7 +59,10 @@ public class EmployeeController {
                                            @RequestHeader( required = true) String role) throws Exception {
 
         if (role.equals(UserRole.EMPLOYEE.getAuthority())) {
-               return new ResponseUtil(200,"get_user_success",employeeService.getEmployee(userId,role));
+
+            EmployeeDTO employee = employeeService.getEmployee(userId, role);
+            employee.setProfileImageUri(Base64Encorder.encode(employee.getProfileImageUri()));
+            return new ResponseUtil(200,"get_user_success",employee);
         } else {
                return new ResponseUtil(400,"user role is not valid",null);
         }
@@ -84,7 +83,6 @@ public class EmployeeController {
     }
 
     //send message to the client
-
 
     @GetMapping("/get/clients")
     @ResponseStatus(HttpStatus.CREATED)

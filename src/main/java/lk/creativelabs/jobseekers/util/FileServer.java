@@ -25,8 +25,6 @@ public class FileServer {
     }
 
 
-
-
     public static String createDrictoryAndSaveFile(String folderPath,MultipartFile file) throws Exception {
         File assetsFolder  = new File(folderPath);
 

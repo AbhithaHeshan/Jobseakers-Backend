@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 public interface SubmittedWorksRepo extends MongoRepository<SubmittedWorks, String> ,  CustomSubmittedWorksRepo {
     SubmittedWorks findByJobId(String jobId);
 
@@ -21,8 +20,6 @@ public interface SubmittedWorksRepo extends MongoRepository<SubmittedWorks, Stri
 interface CustomSubmittedWorksRepo {
     List<SubmittedWorks> findByClientId(String clientId);
 }
-
-
 
 class CustomSubmittedWorkImpl implements  CustomSubmittedWorksRepo{
 

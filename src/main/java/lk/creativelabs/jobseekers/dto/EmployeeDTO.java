@@ -53,6 +53,21 @@ public class EmployeeDTO {
         this.userId = userId;
     }
 
+
+    public void setEmployeeDTO(String name, Address address, LocalDate dateOfBirth, String email, String tel, String profileImageUri, String workingType, String jobType ,String jobRoleType) {
+        this.name = name;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.tel = tel;
+        this.profileImageUri = profileImageUri;
+        this.workingType = workingType;
+        this.jobType = jobType;
+        this.jobRoleType = jobRoleType;
+    }
+
+
+
     public EmployeeDTO(String name, Address address, LocalDate dateOfBirth, String email, String tel, String profileImageUri, String workingType, String jobType ) {
         this.name = name;
         this.address = address;
@@ -67,3 +82,4 @@ public class EmployeeDTO {
 
 
 }
+// new EmployeeDTO(employee.getName(),employee.getAddress(),employee.getDateOfBirth(),employee.getEmail(),employee.getTel(),employee.getProfileImageUri(),employee.getWorkingType(),employee.getJobType(),employee.getJobRoleType());
