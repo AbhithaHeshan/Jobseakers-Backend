@@ -1,10 +1,8 @@
 package lk.creativelabs.jobseekers.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lk.creativelabs.jobseekers.dto.ApplicationDTO;
-import lk.creativelabs.jobseekers.dto.EmployeeDTO;
 import lk.creativelabs.jobseekers.service.ApplicationService;
 import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.ResponseUtil;
@@ -51,9 +49,10 @@ public class JobApplicationController {
           return new ResponseUtil(200,"get user data",applicationService.getAllOfEachClient(userId));
     }
 
-    @PostMapping("/approval/status")
-    public ResponseUtil updateApprovalStatus(){
-       return null;
+    @GetMapping("get/by/{client_userId}/{jobType}/{jobRole}/{status}")
+    public ResponseUtil getApplicationBy(@PathVariable(value = "client_userId") String client_userId, @PathVariable(value = "jobType") String jobType, @PathVariable(value = "jobRole") String jpbRole,@PathVariable(value = "status" ,required = false) String status){
+        System.out.println(client_userId + " "+ jobType + " "+ jpbRole + " " + status);
+       return new ResponseUtil(200," get applications by ",applicationService.getAllOfEachClientFilterBy(client_userId,jobType,jpbRole,status));
     }
 
 

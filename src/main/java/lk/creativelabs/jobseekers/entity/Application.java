@@ -24,6 +24,7 @@ public class Application {
     String additionalQualifications;
     String userId;
     String jobCatogary;
+    String jobRoleType;
     String approvalStatus;
 
 

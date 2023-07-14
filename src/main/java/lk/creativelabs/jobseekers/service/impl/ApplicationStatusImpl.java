@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -107,5 +108,23 @@ public class ApplicationStatusImpl implements ApplicationService {
 
         return null;
     }
+
+    @Override
+    public ArrayList<ApplicationDTO> getAllOfEachClientFilterBy(String clientId, String jobType, String jobRoleType,String status){
+
+        System.out.println(clientId + " " + jobType + " "+ jobRoleType + " "+ status);
+        Client clientByUserId = clientRepo.getClientByUserId(clientId).get();
+        List<Application> details ;
+         if(!status.equals("null")){
+             details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeAndApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
+         }else{
+
+             details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeOrApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
+         }
+
+
+        return details.stream().map(application -> modalMapper.map(application, ApplicationDTO.class)).collect(Collectors.toCollection(ArrayList::new));
+    }
+
 
 }

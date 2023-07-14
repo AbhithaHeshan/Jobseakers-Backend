@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET,"/works/get/all/dataBy").permitAll();
         http.authorizeRequests().antMatchers(GET,"/employee/get/clients").permitAll();
         http.authorizeRequests().antMatchers(GET,"/client/get/employees/by/clientId").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/jobApplication/get/by/{client_userId}/{jobType}/{jobRole}/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthonticationFilter);

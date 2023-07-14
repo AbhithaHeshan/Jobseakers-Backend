@@ -183,7 +183,7 @@ public class WorkServiceImpl implements WorkService {
 
         } else if (!catogary.equals("All") && !status.equals("All")){
 
-            System.out.println("RRRRRRRRRRRRR");
+             System.out.println("RRRRRRRRRRRRR");
 
              allByFilter = employeeWorksRepo.getAll(clientid,status,catogary);
 

@@ -20,5 +20,6 @@ public class ApplicationDTO {
     String additionalQualifications;
     String userId;
     String jobCatogary;
+    String jobRoleType;
     String approvalStatus;
 }

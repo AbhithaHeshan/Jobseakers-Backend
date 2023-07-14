@@ -15,4 +15,7 @@ public interface ApplicationRepo extends JpaRepository<Application,String> {
 
       List<Application> getApplicationByClient_ClientId(long clientId);
 
+      List<Application> getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeOrApprovalStatus(long clientId,String jobCatogary,String jobRoleType,String status);
+      List<Application> getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeAndApprovalStatus(long clientId,String jobCatogary,String jobRoleType,String status);
+
 }

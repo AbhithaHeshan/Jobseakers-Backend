@@ -13,5 +13,5 @@ public interface ApplicationService {
     ArrayList<ApplicationDTO> getAllOfEachClient(String clientId);
     ApplicationDTO updateApplicationApproval(String applicationId, String status);
 
-
+    ArrayList<ApplicationDTO> getAllOfEachClientFilterBy(String clientId,String jobType,String jobRoleType,String status);
 }
