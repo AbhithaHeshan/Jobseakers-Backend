@@ -23,5 +23,18 @@ public class EmployeeWorksDTO {
         private LocalDate givenDate;
         private LocalDate deadline;
         private String workStatus;
+        private LocalDate submittedDate;
 
+
+        public EmployeeWorksDTO(String clientId, String employeeId, String name, String jobId, Works works, LocalDate givenDate, LocalDate deadline, String workStatus) {
+
+                this.clientId = clientId;
+                this.employeeId = employeeId;
+                this.employeeName = name;
+                this.jobId = jobId;
+                this.workInfo = works;
+                this.givenDate = givenDate;
+                this.deadline = deadline;
+                this.workStatus = workStatus;
+        }
 }

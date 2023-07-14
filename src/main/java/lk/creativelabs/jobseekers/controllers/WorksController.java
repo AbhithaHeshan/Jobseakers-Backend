@@ -62,8 +62,6 @@ public class WorksController {
          @GetMapping("/get/works")
          public ResponseUtil getWorksForEachEmployee(@RequestHeader String employeeId){
 
-
-
              return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
          }
 
@@ -74,7 +72,7 @@ public class WorksController {
 
              JsonMapper jsonMapper = new JsonMapper();
              jsonMapper.registerModule(new JavaTimeModule());
-             SubmittedWorksDTO submittedWorksDTO = jsonMapper.readValue(submitWorks, SubmittedWorksDTO.class);
+             EmployeeWorksDTO submittedWorksDTO = jsonMapper.readValue(submitWorks, EmployeeWorksDTO.class);
 
              String rootFolder = "./assets";
 
@@ -86,9 +84,7 @@ public class WorksController {
              //saved file locations
              String profilePath = FileServer.createDrictoryAndSaveFile(employeeFolderPath, doc);
              System.out.println(profilePath);
-
-
-             submittedWorksDTO.getWorkInfo().setDocUrl(profilePath);
+             submittedWorksDTO.getWorkInfo().setDocUrl2(profilePath);
 
              System.out.println(submittedWorksDTO.toString());
              return new ResponseUtil(200,"submit success",workService.submittedWorks(submittedWorksDTO));

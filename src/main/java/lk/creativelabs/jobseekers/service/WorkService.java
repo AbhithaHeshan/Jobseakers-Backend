@@ -15,7 +15,7 @@ public interface WorkService {
         EmployeeWorksDTO giveWorkForTheEmployee(EmployeeWorksDTO employeeWorksDTO);
 
 
-        SubmittedWorksDTO submittedWorks(SubmittedWorksDTO submittedWorksDTO);
+        EmployeeWorksDTO submittedWorks(EmployeeWorksDTO submittedWorksDTO);
 
 
         List<EmployeeWorksDTO> getWorksForWork(String employeeId);
@@ -26,7 +26,7 @@ public interface WorkService {
 
         EmployeeWorksDTO markWork(String jobId,String status);
 
-        SubmittedWorksDTO markWorkAsRead(String jobId);
+        EmployeeWorksDTO markWorkAsRead(String jobId);
 
 
         EmployeeAndClent  getDataFiltered(String userId, String catogary, String status);

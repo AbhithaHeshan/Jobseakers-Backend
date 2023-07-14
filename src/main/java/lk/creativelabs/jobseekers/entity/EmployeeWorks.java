@@ -2,10 +2,7 @@ package lk.creativelabs.jobseekers.entity;
 
 
 import lk.creativelabs.jobseekers.dto.utils.Works;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -18,6 +15,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString
 @Document(collection = "employee_works")
 public class EmployeeWorks {
 
@@ -30,6 +28,7 @@ public class EmployeeWorks {
     private LocalDate givenDate;
     private LocalDate deadline;
     private String workStatus; // submitted / pending
+    private LocalDate submittedDate;
 
 
 }
