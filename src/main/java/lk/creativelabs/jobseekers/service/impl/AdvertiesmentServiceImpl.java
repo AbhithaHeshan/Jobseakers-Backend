@@ -49,6 +49,7 @@ public class AdvertiesmentServiceImpl implements AdvertiesmentService {
             Advertisement advertisement = mapper.map(advertiesmentDTO, Advertisement.class);
              advertisement.setClient(client);
              advertisement.setJobCategory(jobCategory);
+             advertisement.setUserId(userId);
 
             return  mapper.map(advertisementRepo.save(advertisement),AdvertiesmentDTO.class);
         }catch (Exception e) {

@@ -21,6 +21,7 @@ public class AdvertiesmentDTO {
     String description;
     LocalDate startDate;
     LocalDate endDate;
+    String userId;
 
 
 

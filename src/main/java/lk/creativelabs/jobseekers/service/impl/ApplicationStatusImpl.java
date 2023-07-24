@@ -66,7 +66,7 @@ public class ApplicationStatusImpl implements ApplicationService {
         application.setUserId(applicationDTO.getUserId());
         application.setAdditionalQualifications(applicationDTO.getAdditionalQualifications());
         application.setWorkingType(applicationDTO.getWorkingType());
-        application.setApprovalStatus(String.valueOf(ApprovalStatus.PENDING));
+        application.setApprovalStatus("New");
 
         applicationRepo.save(application);
         return  modalMapper.map( modalMapper.map(applicationRepo.save(application),Application.class),ApplicationDTO.class);

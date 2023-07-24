@@ -26,7 +26,7 @@ public class Advertisement {
      String description;
      LocalDate startDate;
      LocalDate endDate;
-     String clientUserId;
+     String userId;
 
      @ManyToOne(fetch = FetchType.LAZY)
      @JoinColumn(name = "categoryId")

@@ -121,7 +121,6 @@ public class WorksController {
 
         }
 
-
         //get all mark as read
         @PostMapping ("get/all/read/works")
         public ResponseUtil getAllReadWorks(@RequestHeader String jobId){
