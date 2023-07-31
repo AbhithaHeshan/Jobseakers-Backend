@@ -8,8 +8,6 @@ import java.util.Base64;
 
 public class Base64Encorder {
 
-
-
       public static  String encode(String file){
           String filePath = file.replaceFirst("file:///", "");
 
