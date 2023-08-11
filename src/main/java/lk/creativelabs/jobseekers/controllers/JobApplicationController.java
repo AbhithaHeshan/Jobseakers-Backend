@@ -52,9 +52,8 @@ public class JobApplicationController {
     @GetMapping("get/by/{client_userId}/{jobType}/{jobRole}/{status}")
     public ResponseUtil getApplicationBy(@PathVariable(value = "client_userId") String client_userId, @PathVariable(value = "jobType") String jobType, @PathVariable(value = "jobRole") String jpbRole,@PathVariable(value = "status" ,required = false) String status){
         System.out.println(client_userId + " "+ jobType + " "+ jpbRole + " " + status);
-       return new ResponseUtil(200," get applications by ",applicationService.getAllOfEachClientFilterBy(client_userId,jobType,jpbRole,status));
+       return new ResponseUtil(200," get applications by  ",applicationService.getAllOfEachClientFilterBy(client_userId,jobType,jpbRole,status));
     }
-
 
     @PostMapping("/getAll")
     public void getAllApplications(){

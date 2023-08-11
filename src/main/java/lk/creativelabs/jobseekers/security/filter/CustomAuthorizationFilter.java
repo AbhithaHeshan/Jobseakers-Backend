@@ -36,7 +36,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
              filterChain.doFilter(request,response);
          }else{
              String authorizationHeader = request.getHeader("Authorization");  //AUTHORIZATION
-
              System.out.println(authorizationHeader+ " "+ "  vvvvvvvvvv  " );
              if(authorizationHeader != null &&  authorizationHeader.startsWith("Bearer ")){
                  try{
@@ -60,14 +59,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                        log.error("Error logging in : {}",exception.getMessage());
                        response.setHeader("error",exception.getMessage());
                        response.setStatus(FORBIDDEN.value());
-                     //  response.sendError(FORBIDDEN.value());
+                       //  response.sendError(FORBIDDEN.value());
 
                          Throwable nestedException = exception;
                          while (nestedException.getCause() != null) {
                              nestedException = nestedException.getCause();
                          }
                          String nestedMessage = nestedException.getMessage();
-
 
                          Map<String, Object> res = new HashMap<>();
 
@@ -79,7 +77,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
                          response.setContentType(APPLICATION_JSON_VALUE);
                          new ObjectMapper().writeValue(response.getOutputStream(),res);
-
                  }
              }else{
                    log.warn("do filter");

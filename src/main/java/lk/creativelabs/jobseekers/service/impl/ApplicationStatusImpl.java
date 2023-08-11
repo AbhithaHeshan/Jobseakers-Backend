@@ -62,6 +62,7 @@ public class ApplicationStatusImpl implements ApplicationService {
         application.setCvUri(applicationDTO.getCvUri());
         application.setDateOfBirth(applicationDTO.getDateOfBirth());
         application.setJobCatogary(applicationDTO.getJobCatogary());
+        application.setJobRoleType(applicationDTO.getJobRoleType());
         application.setTelOne(applicationDTO.getTelOne());
         application.setUserId(applicationDTO.getUserId());
         application.setAdditionalQualifications(applicationDTO.getAdditionalQualifications());
@@ -117,11 +118,18 @@ public class ApplicationStatusImpl implements ApplicationService {
         List<Application> details ;
          if(!status.equals("null")){
              details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeAndApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
-         }else{
+             System.out.println("VVVVVVVVVVVVVVVVVV" + clientByUserId.getClientId());
 
+             System.out.println(details.size());
+
+         }else{
              details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeOrApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
          }
 
+        for (Application s: details
+             ) {
+            System.out.println(s.getApprovalStatus()+ " ffff ");
+        }
 
         return details.stream().map(application -> modalMapper.map(application, ApplicationDTO.class)).collect(Collectors.toCollection(ArrayList::new));
     }
