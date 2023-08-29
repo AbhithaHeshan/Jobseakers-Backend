@@ -31,14 +31,12 @@ public class WorksController {
          @PostMapping("create/new/works")
          public ResponseUtil giveWorksToTheRegisteredEmployee(@RequestParam String details,@RequestParam MultipartFile doc) throws Exception {
 
-                         System.out.println("CCCCCCCCCCCCCC");
 
                          JsonMapper jsonMapper = new JsonMapper();
                          jsonMapper.registerModule(new JavaTimeModule());
                          EmployeeWorksDTO employeeWorksDTO = jsonMapper.readValue(details, EmployeeWorksDTO.class);
 
                          System.out.println(employeeWorksDTO.getEmployeeId());
-
 
                          employeeWorksDTO.setJobId(UUID.randomUUID().toString());
 
@@ -56,7 +54,6 @@ public class WorksController {
 
              return new ResponseUtil(200," give works ",workService.giveWorkForTheEmployee(employeeWorksDTO));  //workService.giveWorkForTheEmployee(employeeWorksDTO)
          }
-
 
 
          @GetMapping("/get/works")

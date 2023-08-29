@@ -7,10 +7,11 @@ import lk.creativelabs.jobseekers.service.ApplicationService;
 import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
-
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("jobApplication")
@@ -19,7 +20,7 @@ public class JobApplicationController {
     @Autowired
     ApplicationService applicationService;
 
-     @PostMapping("/create/new")
+     @PostMapping(value = "/create/new" , consumes = {MediaType.ALL_VALUE})
      public ResponseUtil createNewApplication(@RequestParam String application, @RequestHeader String clientUserId, @RequestHeader String employeeUserId, @RequestParam MultipartFile cv) throws Exception {
          JsonMapper jsonMapper = new JsonMapper();
          jsonMapper.registerModule(new JavaTimeModule());
@@ -38,9 +39,11 @@ public class JobApplicationController {
          return new ResponseUtil(200,"appllication save success",applicationService.createNewApplication(clientUserId,employeeUserId,applicationDto));
      }
 
-    @PostMapping("/update/status")
-    public ResponseUtil updateApplicationStatus(@RequestHeader String applicationId , @RequestBody Map<String, String> data){
-         return  new ResponseUtil(200,"status update",applicationService.updateApplicationApproval(applicationId,data.get("status")));
+    @GetMapping("/update/status")
+    public ResponseUtil updateApplicationStatus(@RequestHeader String applicationId ,@RequestHeader String status){
+
+        System.out.println(applicationId);
+       return  new ResponseUtil(200,"status update",applicationService.updateApplicationApproval(applicationId,status));
 
     }
 

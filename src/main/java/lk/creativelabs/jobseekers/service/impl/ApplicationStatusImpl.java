@@ -11,13 +11,23 @@ import lk.creativelabs.jobseekers.repo.ClientRepo;
 import lk.creativelabs.jobseekers.repo.EmployeeRepo;
 import lk.creativelabs.jobseekers.repo.RegisteredEmployeeRepo;
 import lk.creativelabs.jobseekers.service.ApplicationService;
+import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.UserIdGenerator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,14 +46,14 @@ public class ApplicationStatusImpl implements ApplicationService {
     @Autowired
     EmployeeRepo employeeRepo;
 
-
-
     @Autowired
     ModelMapper modalMapper;
 
     @Autowired
     RegisteredEmployeeRepo registeredEmployeeRepo;
 
+    @Autowired
+    FileServer fileServer;
 
     @Override
     public ApplicationDTO createNewApplication(String clientId,String employeeId, ApplicationDTO applicationDTO) {
@@ -118,20 +128,26 @@ public class ApplicationStatusImpl implements ApplicationService {
         List<Application> details ;
          if(!status.equals("null")){
              details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeAndApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
-             System.out.println("VVVVVVVVVVVVVVVVVV" + clientByUserId.getClientId());
-
-             System.out.println(details.size());
 
          }else{
              details = applicationRepo.getApplicationByClient_ClientIdAndJobCatogaryAndJobRoleTypeOrApprovalStatus(clientByUserId.getClientId(), jobType, jobRoleType,status);
          }
+        ArrayList<ApplicationDTO> applicationDTOS = new ArrayList<>();
 
-        for (Application s: details
-             ) {
-            System.out.println(s.getApprovalStatus()+ " ffff ");
+        for (Application application: details) {
+
+            String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(application.getCvUri()),"applications");
+
+            ApplicationDTO data = modalMapper.map(application, ApplicationDTO.class);
+            data.setCvUri(cvUri);
+            applicationDTOS.add(data);
+
         }
 
-        return details.stream().map(application -> modalMapper.map(application, ApplicationDTO.class)).collect(Collectors.toCollection(ArrayList::new));
+        return  applicationDTOS;
+
+  // return details.stream().map(application -> modalMapper.map(application, ApplicationDTO.class)).collect(Collectors.toCollection(ArrayList::new));
+
     }
 
 
