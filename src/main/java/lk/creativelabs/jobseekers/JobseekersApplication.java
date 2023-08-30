@@ -37,6 +37,9 @@ public class JobseekersApplication {
 	@Value("${employee.path}")
     private String employeePath;
 
+	@Value("${works.path}")
+    private String works;
+
 	@Value("${file.prefix}")
     private String prefix;
 
@@ -66,7 +69,7 @@ public class JobseekersApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addResourceHandlers( ResourceHandlerRegistry registry) {
-				registry.addResourceHandler("/"+prefix+"/**").addResourceLocations(applicationPath,clientPath,employeePath);
+				registry.addResourceHandler("/"+prefix+"/**").addResourceLocations(applicationPath,clientPath,employeePath,works);
 			}
 		};
 	}

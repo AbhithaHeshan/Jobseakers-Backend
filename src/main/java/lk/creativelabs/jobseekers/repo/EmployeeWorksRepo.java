@@ -30,7 +30,7 @@ public interface EmployeeWorksRepo extends MongoRepository<EmployeeWorks,String>
 }
 
 interface CustomEmployeeWorksRepo{
-       List<EmployeeWorks> findWorks(String employeeId);
+       List<EmployeeWorks> findWorks(String employeeId,String clientId);
 
        List<EmployeeWorks>  findAllByFilter(String clientId,String catogary,String status);
 
@@ -51,9 +51,9 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
     public MongoTemplate mongoTemplate;
 
     @Override
-    public List<EmployeeWorks> findWorks(String employeeId) {
+    public List<EmployeeWorks> findWorks(String employeeId,String clientId) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("workStatus").is("pending").and("employeeId").is(employeeId));
+        query.addCriteria(Criteria.where("workStatus").is("Pending").and("employeeId").is(employeeId).and("clientId").is(clientId));
         return mongoTemplate.find(query, EmployeeWorks.class);
 
     }

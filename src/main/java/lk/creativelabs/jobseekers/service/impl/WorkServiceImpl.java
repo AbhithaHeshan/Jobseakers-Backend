@@ -1,5 +1,6 @@
 package lk.creativelabs.jobseekers.service.impl;
 
+import lk.creativelabs.jobseekers.dto.ClientCommenDTO;
 import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeWorksDTO;
 import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,7 +88,7 @@ public class WorkServiceImpl implements WorkService {
     public EmployeeWorksDTO submittedWorks(EmployeeWorksDTO submittedWorksDTO) {
 
         //    Employee employeeByUserId = employeeRepo.getEmployeeByUserId(submittedWorksDTO.getEmployeeId()).get();
-        Client clientByUserId = clientRepo.getClientByUserId(submittedWorksDTO.getClientId()).orElseThrow();
+        Client clientByUserId = clientRepo.getClientByClientId(Long.parseLong(submittedWorksDTO.getClientId())).orElseThrow();
 
         Optional<Employee> employeeByUserId1 = employeeRepo.getEmployeeByUserId(submittedWorksDTO.getEmployeeId());
         employeeByUserId1.orElseThrow();
@@ -106,29 +108,30 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public List<EmployeeWorksDTO> getWorksForWork(String employeeId) {
+    public List<EmployeeWorksDTO> getWorksForWork(String employeeId,String clientId) {
         Employee employeeByUserId = employeeRepo.getEmployeeByUserId(employeeId).get();
-        List<EmployeeWorks> employeeWorks = employeeWorksRepo.findWorks(String.valueOf(employeeByUserId.getEmployeeId()));
+        System.out.println(employeeByUserId.getEmployeeId() + " " + clientId);
+        List<EmployeeWorks> employeeWorks = employeeWorksRepo.findWorks(String.valueOf(employeeByUserId.getEmployeeId()),clientId);
 
         List<EmployeeWorksDTO> data = new ArrayList<>();
         employeeWorks.forEach((empWorks) -> {
             Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(empWorks.getEmployeeId()));
             Works postWork = empWorks.getPostWork();
-            new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), postWork.getDocUrl());
-            data.add(new EmployeeWorksDTO(empWorks.getClientId(), empWorks.getEmployeeId(), employeeByEmployeeId.get().getName(), empWorks.getJobId(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), Base64Encorder.encode(postWork.getDocUrl())), empWorks.getGivenDate(), empWorks.getDeadline(), empWorks.getWorkStatus(), null));
+            String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(postWork.getDocUrl()),"works");
+            data.add(new EmployeeWorksDTO(empWorks.getClientId(), empWorks.getEmployeeId(), employeeByEmployeeId.get().getName(), empWorks.getJobId(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), cvUri,""),empWorks.getGivenDate(),empWorks.getDeadline(),empWorks.getWorkStatus()));
+
         });
         return data;
-
     }
 
     @Override
-    public List<ClientDTO> getClientsForEachEmp(String employeeUserId) {
+    public List<ClientCommenDTO> getClientsForEachEmp(String employeeUserId) {
         System.out.println(employeeUserId + " vvvvvvvvvvv bbbb");
         Optional<Employee> employee = employeeRepo.getEmployeeByUserId(employeeUserId);
 
 
 
-        List<ClientDTO> clientsByIds = new ArrayList<>();
+        List<ClientCommenDTO> clientsByIds = new ArrayList<>();
         if(employee.isPresent()){
             List<Long> allClientIds = employeeWorksRepo.getAllClientIdsByUsingEmployeeId(String.valueOf(employee.get().getEmployeeId()));
 
@@ -137,7 +140,7 @@ public class WorkServiceImpl implements WorkService {
                 if(clientByClientId.isPresent()){
                     Client client = clientByClientId.get();
                     String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(client.getProfileImageUri()),"client");
-                    clientsByIds.add(new ClientDTO(client.getOwner(),client.getAddress(),client.getBusinessName(),client.getBusinessType(),client.getEmail(),client.getTel(),cvUri));
+                    clientsByIds.add(new ClientCommenDTO(client.getClientId(),client.getOwner(),client.getAddress(),client.getBusinessName(),client.getBusinessType(),client.getEmail(),client.getTel(),cvUri));
                 }
             });
 

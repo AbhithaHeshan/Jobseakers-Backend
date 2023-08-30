@@ -61,9 +61,10 @@ public class WorksController {
 
 
          @GetMapping("/get/works")
-         public ResponseUtil getWorksForEachEmployee(@RequestHeader String employeeId){
+         public ResponseUtil getWorksForEachEmployee(@RequestHeader String employeeId,@RequestHeader String clientId){
+             System.out.println(clientId + " " + employeeId);
+             return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId,clientId));
 
-             return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
          }
 
 
@@ -76,7 +77,7 @@ public class WorksController {
 
          @PostMapping("/submitted/works")
          public ResponseUtil postCompletedWorks(@RequestParam String submitWorks, @RequestParam MultipartFile doc) throws Exception {
-
+             System.out.println( submitWorks + " vvvvnnm");
              JsonMapper jsonMapper = new JsonMapper();
              jsonMapper.registerModule(new JavaTimeModule());
              EmployeeWorksDTO submittedWorksDTO = jsonMapper.readValue(submitWorks, EmployeeWorksDTO.class);
@@ -90,7 +91,7 @@ public class WorksController {
 
              //saved file locations
              String profilePath = FileServer.createDrictoryAndSaveFile(employeeFolderPath, doc);
-             System.out.println(profilePath);
+             System.out.println(profilePath + " dfddddddddddddd ");
              submittedWorksDTO.getWorkInfo().setDocUrl2(profilePath);
 
              System.out.println(submittedWorksDTO.toString());

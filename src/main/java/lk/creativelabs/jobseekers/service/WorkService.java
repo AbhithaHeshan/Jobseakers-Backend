@@ -1,5 +1,6 @@
 package lk.creativelabs.jobseekers.service;
 
+import lk.creativelabs.jobseekers.dto.ClientCommenDTO;
 import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeWorksDTO;
 import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
@@ -20,10 +21,10 @@ public interface WorkService {
         EmployeeWorksDTO submittedWorks(EmployeeWorksDTO submittedWorksDTO);
 
 
-        List<EmployeeWorksDTO> getWorksForWork(String employeeId);
+        List<EmployeeWorksDTO> getWorksForWork(String employeeId,String clientId);
 
 
-        List<ClientDTO> getClientsForEachEmp(String employeeId);
+        List<ClientCommenDTO> getClientsForEachEmp(String employeeId);
 
 
         List<SubmittedWorksDTO> getSubmittedWorks(String clientId);
