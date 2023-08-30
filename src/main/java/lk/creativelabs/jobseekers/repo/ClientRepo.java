@@ -32,6 +32,6 @@ public interface ClientRepo extends JpaRepository<Client,String> {
        @Query("SELECT c FROM Client c WHERE c.clientId IN :clientIds")
        List<Client> getClientsByIds(List<Long> clientIds);
 
-
+    @Query("SELECT DISTINCT c FROM Client  c WHERE c.clientId = :clientId")
     Optional<Client> getClientByClientId(Long clientId);
 }

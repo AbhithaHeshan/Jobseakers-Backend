@@ -8,9 +8,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface EmployeeWorksRepo extends MongoRepository<EmployeeWorks,String> , CustomEmployeeWorksRepo{
@@ -79,7 +77,23 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
             System.out.println(emp.toString());
             ids.add(Long.valueOf(emp.getClientId()));
         }
-        return ids;
+
+
+        return  filterDuplicates(ids);
+    }
+
+    public static List<Long> filterDuplicates(List<Long> inputList) {
+        Set<Long> seen = new HashSet<>();
+        List<Long> filteredList = new ArrayList<>();
+
+        for (Long value : inputList) {
+            if (!seen.contains(value)) {
+                seen.add(value);
+                filteredList.add(value);
+            }
+        }
+
+        return filteredList;
     }
 
 

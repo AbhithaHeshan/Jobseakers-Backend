@@ -162,8 +162,15 @@ public class WorkServiceImpl implements WorkService {
 
             Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(submitted.getEmployeeId()));
             Works postWork = submitted.getCompletedWork();
-            new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), postWork.getDocUrl());
-            data.add(new SubmittedWorksDTO(submitted.getClientId(), submitted.getEmployeeId(), employeeByEmployeeId.get().getName(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), postWork.getDocUrl()), submitted.getJobId(), submitted.getSubmittedDate(), submitted.getWorkStatus()));
+            new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), postWork.getDocUrl(), postWork.getDocUrl2());
+            String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(postWork.getDocUrl()),"works");
+            String cvUri2 =  fileServer.createFileLink(fileServer.uriToFileName(postWork.getDocUrl2()),"works/submitted");
+            System.out.println();
+            System.out.println();
+            System.out.println(cvUri + " " + cvUri2);
+            System.out.println();
+            System.out.println();
+            data.add(new SubmittedWorksDTO(submitted.getClientId(), submitted.getEmployeeId(), employeeByEmployeeId.get().getName(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), cvUri, cvUri2), submitted.getJobId(), submitted.getSubmittedDate(), submitted.getWorkStatus()));
 
         });
 
@@ -182,8 +189,9 @@ public class WorkServiceImpl implements WorkService {
         Works postWork = submitted.getPostWork();
 
         Optional<Employee> employeeByEmployeeId = employeeRepo.getEmployeeByEmployeeId(Long.parseLong(submitted.getEmployeeId()));
-
-        return new EmployeeWorksDTO(submitted.getClientId(), submitted.getEmployeeId(), employeeByEmployeeId.get().getName(), submitted.getJobId(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), postWork.getDocUrl(), postWork.getDocUrl2()), submitted.getGivenDate(), submitted.getDeadline(), submitted.getWorkStatus(), submitted.getSubmittedDate());
+        String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(postWork.getDocUrl()),"works");
+        String cvUri2 =  fileServer.createFileLink(fileServer.uriToFileName(postWork.getDocUrl2()),"works/submitted");
+        return new EmployeeWorksDTO(submitted.getClientId(), submitted.getEmployeeId(), employeeByEmployeeId.get().getName(), submitted.getJobId(), new Works(postWork.getTitle(), postWork.getCategory(), postWork.getDescription(), cvUri, cvUri2), submitted.getGivenDate(), submitted.getDeadline(), submitted.getWorkStatus(), submitted.getSubmittedDate());
 
     }
 
@@ -280,14 +288,14 @@ public class WorkServiceImpl implements WorkService {
             String docUrl;
             String docUrl2;
             if (submitted.getPostWork().getDocUrl() != null) {
-                docUrl = Base64Encorder.encode(submitted.getPostWork().getDocUrl());
+                docUrl = fileServer.createFileLink(fileServer.uriToFileName(submitted.getPostWork().getDocUrl()),"works");;
             } else {
                 docUrl = "";
             }
 
 
             if (submitted.getPostWork().getDocUrl2() != null) {
-                docUrl2 = Base64Encorder.encode(submitted.getPostWork().getDocUrl2());
+                docUrl2 = fileServer.createFileLink(fileServer.uriToFileName(submitted.getPostWork().getDocUrl2()),"works/submitted");
 
             } else {
                 docUrl2 = "";
