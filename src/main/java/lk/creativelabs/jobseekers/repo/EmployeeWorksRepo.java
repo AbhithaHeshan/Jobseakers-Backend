@@ -96,8 +96,6 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
         return filteredList;
     }
 
-
-
 //    @Override
 //    public List<EmployeeWorks> findAllByFilterWhenStatusIsAll(String clientId, String category) {
 //        Query query = new Query();
