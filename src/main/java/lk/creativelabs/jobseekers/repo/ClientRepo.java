@@ -6,6 +6,7 @@ import lk.creativelabs.jobseekers.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepo extends JpaRepository<Client,String> {
@@ -28,7 +29,9 @@ public interface ClientRepo extends JpaRepository<Client,String> {
 
         Optional<Client> getClientByClientId(long userId);
 
+       @Query("SELECT c FROM Client c WHERE c.clientId IN :clientIds")
+       List<Client> getClientsByIds(List<Long> clientIds);
 
 
-
+    Optional<Client> getClientByClientId(Long clientId);
 }

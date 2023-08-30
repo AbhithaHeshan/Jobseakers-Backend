@@ -9,6 +9,7 @@ import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeWorksDTO;
 import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
 import lk.creativelabs.jobseekers.dto.utils.Works;
+import lk.creativelabs.jobseekers.service.ClientService;
 import lk.creativelabs.jobseekers.service.WorkService;
 import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.ResponseUtil;
@@ -27,6 +28,9 @@ public class WorksController {
          @Autowired
          WorkService workService;
 
+
+         @Autowired
+          ClientService clientService;
 
          @PostMapping("create/new/works")
          public ResponseUtil giveWorksToTheRegisteredEmployee(@RequestParam String details,@RequestParam MultipartFile doc) throws Exception {
@@ -62,6 +66,12 @@ public class WorksController {
              return new ResponseUtil(200," get Work ",workService.getWorksForWork(employeeId));
          }
 
+
+        @GetMapping("/get/specific/clients")
+        public ResponseUtil getClientsForEachEmployee(@RequestHeader String userId){
+            System.out.println(userId + " " +  " bbbbbbbbbbbbbbbbbbb ");
+            return new ResponseUtil(200," get Work CC",workService.getClientsForEachEmp(userId));
+        }
 
 
          @PostMapping("/submitted/works")

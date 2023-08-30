@@ -8,8 +8,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface EmployeeWorksRepo extends MongoRepository<EmployeeWorks,String> , CustomEmployeeWorksRepo{
 
@@ -38,6 +40,7 @@ interface CustomEmployeeWorksRepo{
 
        List<EmployeeWorks> findDocUriById(String jobId);
 
+       List<Long> getAllClientIdsByUsingEmployeeId(String employeeId);
 
 }
 
@@ -60,6 +63,23 @@ class EmployeeWorksRepoImpl implements CustomEmployeeWorksRepo{
         Query query = new Query();
         query.addCriteria(Criteria.where("clientId").is(clientId).and("postWork.category").is(category));
        return mongoTemplate.find(query, EmployeeWorks.class);
+    }
+
+    @Override
+    public List<Long> getAllClientIdsByUsingEmployeeId(String employeeId) {
+        System.out.println(employeeId + " cccccccc VVB");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("employeeId").is(employeeId));
+        List<EmployeeWorks> employeeWorks = mongoTemplate.find(query, EmployeeWorks.class);
+
+        List<Long> ids = new ArrayList<>();
+        for (EmployeeWorks emp: employeeWorks
+             ) {
+
+            System.out.println(emp.toString());
+            ids.add(Long.valueOf(emp.getClientId()));
+        }
+        return ids;
     }
 
 

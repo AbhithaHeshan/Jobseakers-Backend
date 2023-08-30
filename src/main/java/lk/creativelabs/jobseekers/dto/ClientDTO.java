@@ -83,4 +83,14 @@ public class ClientDTO {
         this.profileImageUri = profileImageUri;
     }
 
+    public ClientDTO(String owner, Address address, String businessName, String businessType, String email, String tel, String profileImageUri) {
+
+        this.owner = owner;
+        this.businessName = businessName;
+        this.businessType = businessType;
+        this.address = address;
+        this.email = email;
+        this.tel = tel;
+        this.profileImageUri = profileImageUri;
+    }
 }

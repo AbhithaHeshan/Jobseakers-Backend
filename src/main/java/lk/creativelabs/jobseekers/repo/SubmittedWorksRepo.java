@@ -18,6 +18,8 @@ public interface SubmittedWorksRepo extends MongoRepository<SubmittedWorks, Stri
     @Query(value = "{'clientId': ?0 ,'workStatus': ?1 }")
     List<SubmittedWorks> getSubmittedAllWorks(String clientId, String status);
 
+
+
 }
 
 //interface CustomSubmittedWorksRepo {

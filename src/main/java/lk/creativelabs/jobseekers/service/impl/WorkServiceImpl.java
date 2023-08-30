@@ -1,5 +1,6 @@
 package lk.creativelabs.jobseekers.service.impl;
 
+import lk.creativelabs.jobseekers.dto.ClientDTO;
 import lk.creativelabs.jobseekers.dto.EmployeeWorksDTO;
 import lk.creativelabs.jobseekers.dto.SubmittedWorksDTO;
 import lk.creativelabs.jobseekers.dto.utils.EmployeeAndClent;
@@ -11,6 +12,7 @@ import lk.creativelabs.jobseekers.entity.SubmittedWorks;
 import lk.creativelabs.jobseekers.repo.*;
 import lk.creativelabs.jobseekers.service.WorkService;
 import lk.creativelabs.jobseekers.util.Base64Encorder;
+import lk.creativelabs.jobseekers.util.FileServer;
 import lk.creativelabs.jobseekers.util.UserIdGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class WorkServiceImpl implements WorkService {
 
     @Autowired
     ModelMapper modalMapper;
+
+    @Autowired
+    FileServer fileServer;
 
     @Override
     public EmployeeWorksDTO giveWorkForTheEmployee(EmployeeWorksDTO employeeWorksDTO) {
@@ -115,6 +120,32 @@ public class WorkServiceImpl implements WorkService {
         return data;
 
     }
+
+    @Override
+    public List<ClientDTO> getClientsForEachEmp(String employeeUserId) {
+        System.out.println(employeeUserId + " vvvvvvvvvvv bbbb");
+        Optional<Employee> employee = employeeRepo.getEmployeeByUserId(employeeUserId);
+
+
+
+        List<ClientDTO> clientsByIds = new ArrayList<>();
+        if(employee.isPresent()){
+            List<Long> allClientIds = employeeWorksRepo.getAllClientIdsByUsingEmployeeId(String.valueOf(employee.get().getEmployeeId()));
+
+            allClientIds.forEach((clientId)->{
+                Optional<Client> clientByClientId = clientRepo.getClientByClientId(clientId);
+                if(clientByClientId.isPresent()){
+                    Client client = clientByClientId.get();
+                    String cvUri =  fileServer.createFileLink(fileServer.uriToFileName(client.getProfileImageUri()),"client");
+                    clientsByIds.add(new ClientDTO(client.getOwner(),client.getAddress(),client.getBusinessName(),client.getBusinessType(),client.getEmail(),client.getTel(),cvUri));
+                }
+            });
+
+        }
+
+        return clientsByIds;
+    }
+
 
     @Override
     public List<SubmittedWorksDTO> getSubmittedWorks(String clientId) {
